@@ -25,7 +25,7 @@ public class Estado {
     private Evolucion evolucion;
 
     @OneToMany(mappedBy = "estado", orphanRemoval = true, cascade = CascadeType.ALL)
-    @JsonBackReference
+    @JsonManagedReference
     private List<Tarea> tareas = new ArrayList<>();
 
     public void addTarea(Tarea tarea) {
@@ -89,7 +89,7 @@ public class Estado {
 
     @Override
     public String toString() {
-        return "Estado [id=" + id + ", evolucion=" + evolucion + ", tareas=" + tareas + "]";
+        return "Estado [id=" + id + ", evolucion=" + evolucion + "]";
     }
 
 }

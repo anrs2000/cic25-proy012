@@ -39,31 +39,35 @@ public class TareaController {
 
     @GetMapping("/{id}/estado")
     public Estado getEstado(@PathVariable Long id) {
-        LOGGER.info(String.format("Obteniendo estado de la tarea con id %d desde la ruta /api/tareas/%d/estado", id, id));
+        LOGGER.info(
+                String.format("Obteniendo estado de la tarea con id %d desde la ruta /api/tareas/%d/estado", id, id));
         Estado estado = tareaService.getEstado(id);
         LOGGER.info(String.format("Estado obtenido: %s", estado.toString()));
         return estado;
     }
 
-    @PostMapping
+    @PostMapping("/guardar")
     public Tarea create(@RequestBody Tarea tarea) {
-        LOGGER.info(String.format("Creando nueva tarea desde la ruta /api/tareas con datos: %s", tarea.toString()));
+        LOGGER.info(
+                String.format("Creando nueva tarea desde la ruta /api/tareas/guardar con datos: %s", tarea.toString()));
         return tareaService.create(tarea);
     }
 
     @PutMapping("/{id}/{estadoId}")
-    public Tarea update(@PathVariable Long id,@PathVariable Long estadoId,
-                        @RequestBody Tarea tareaActualizada) {
-        LOGGER.info(String.format("Actualizando tarea con id %d y estadoId %d desde la ruta /api/tareas/%d", id, estadoId, id));
+    public Tarea update(@PathVariable Long id, @PathVariable Long estadoId,
+            @RequestBody Tarea tareaActualizada) {
+        LOGGER.info(String.format("Actualizando tarea con id %d y estadoId %d desde la ruta /api/tareas/%d", id,
+                estadoId, id));
         Tarea tarea = tareaService.update(id, tareaActualizada, estadoId);
-        LOGGER.info(String.format("Tarea actualizada: %s", tarea.toString()));
         return tarea;
     }
 
     @PatchMapping("/{id}/estado")
     public Tarea updateEstado(@PathVariable Long id,
-                              @RequestParam Long estadoId) {
-        LOGGER.info(String.format("Actualizando solo estado a %d de la tarea con id %d desde la ruta /api/tareas/%d/estado", estadoId, id, id));
+            @RequestParam Long estadoId) {
+        LOGGER.info(
+                String.format("Actualizando solo estado a %d de la tarea con id %d desde la ruta /api/tareas/%d/estado",
+                        estadoId, id, id));
         Tarea tarea = tareaService.updateEstado(id, estadoId);
         LOGGER.info(String.format("Estado actualizado en tarea: %s", tarea.toString()));
         return tarea;
@@ -71,7 +75,8 @@ public class TareaController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        LOGGER.info(String.format("Obteniendo tarea con id %d para proceder a eliminarla desde la ruta /api/tareas/%d", id, id));
+        LOGGER.info(String.format("Obteniendo tarea con id %d para proceder a eliminarla desde la ruta /api/tareas/%d",
+                id, id));
         tareaService.delete(id);
         LOGGER.info(String.format("Tarea con id %d eliminada correctamente", id));
     }

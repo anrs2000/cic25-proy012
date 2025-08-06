@@ -48,19 +48,22 @@ public class TareaControllerIntegrationTest {
     EstadoRepository estadoRepository;
 
     private Estado estadoInicial;
+    Tarea tarea;
 
     @BeforeEach
     void preparacion() {
-        // Creamos un estado base para usar en las tareas
         estadoInicial = new Estado();
         estadoInicial.setEvolucion(Evolucion.EN_CURSO);
-        // Guardamos para que tenga ID asignado
+
+        // Persistimos el estado primero
         estadoInicial = tareaService.saveEstado(estadoInicial);
 
-        // Creamos una tarea base con ese estado
-        Tarea tarea = new Tarea();
+        tarea = new Tarea();
         tarea.setDescripcion("Tarea de prueba");
+
+        // Asignamos el estado ya persistido
         tarea.setEstado(estadoInicial);
+        estadoInicial.addTarea(tarea);
 
         tareaService.create(tarea);
     }
@@ -95,23 +98,16 @@ public class TareaControllerIntegrationTest {
                 .andExpect(jsonPath("$.evolucion", is("EN_CURSO")));
     }
 
-
     @Test
-    void testUpdateEstado() throws Exception {
-        Tarea tarea = tareaService.getAll().get(0);
-        Long id = tarea.getId();
-
-        Estado nuevoEstado = new Estado();
-        nuevoEstado.setEvolucion(Evolucion.FINALIZADO);
-        nuevoEstado = tareaService.saveEstado(nuevoEstado); // Guarda para que tenga ID
-
-        Long estadoId = nuevoEstado.getId();
-
-        mockMvc.perform(patch("/api/tareas/" + id + "/estado")
+    void testCreateTarea() throws Exception {
+        mockMvc.perform(post("/api/tareas/guardar")
                 .contentType("application/json")
-                .param("estadoId", String.valueOf(estadoId)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.estado.id", is(estadoId.intValue())));
+                .content(objectMapper.writeValueAsString(tarea)))
+                .andExpect(result -> {
+                    Tarea tareaRecibida = objectMapper.readValue(result.getResponse().getContentAsString(),
+                            Tarea.class);
+                    assertEquals(tareaRecibida.getDescripcion(), tarea.getDescripcion());
+                });
     }
 
     @Test

@@ -1,5 +1,6 @@
 package es.cic.curso25.proy012.modelo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
@@ -20,7 +21,7 @@ public class Tarea {
     private String descripcion;
 
     @JoinColumn(name = "estado_id", nullable = false)
-    @JsonManagedReference
+    @JsonBackReference
     @ManyToOne()
     private Estado estado;
 
